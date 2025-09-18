@@ -36,18 +36,17 @@ defmodule EcommerceWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
-
   end
 
-  ## Authenticated user routes
+  ## Normal authenticated user routes
   scope "/", EcommerceWeb do
     pipe_through [:browser, :require_auth]
 
+    live "/products", ProductLive.Index, :index     # ✅ normal user
     live "/cart", CartLive.Index, :index
     live "/cart/checkout", CartLive.Checkout, :checkout
     live "/orders", OrderLive.Index, :index
 
-    # User settings
     live_session :require_authenticated_user,
       on_mount: [{EcommerceWeb.UserAuth, :require_authenticated}] do
       live "/users/settings", UserLive.Settings, :edit
@@ -63,10 +62,14 @@ defmodule EcommerceWeb.Router do
 
     live "/", AdminLive.Dashboard, :index
     live "/products", ProductLive.Index, :admin_index
-    live "/products/new", ProductLive.Index, :new
-    live "/products/:id/edit", ProductLive.Index, :edit
     live "/orders", OrderLive.Index, :admin_index
     live "/users", UserLive.Index, :index
+
+    # Shared product management routes
+    scope "/products" do
+      live "/new", ProductLive.Index, :new
+      live "/:id/edit", ProductLive.Index, :edit
+    end
   end
 
   ## Manager routes
@@ -74,8 +77,13 @@ defmodule EcommerceWeb.Router do
     pipe_through [:browser, :require_manager]
 
     live "/products", ProductLive.Index, :manager_index
-    live "/products/new", ProductLive.Index, :new
-    live "/products/:id/edit", ProductLive.Index, :edit
+    live "/orders", OrderLive.Index, :manager_index   
+
+    # ✅ Managers also get new/edit product routes
+    # scope "/products" do
+    #   live "/new", ProductLive.Index, :new
+    #   live "/:id/edit", ProductLive.Index, :edit
+    # end
   end
 
   ## Public LiveView auth routes
