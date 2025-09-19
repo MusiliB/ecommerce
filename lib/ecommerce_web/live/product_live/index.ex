@@ -2,7 +2,7 @@ defmodule EcommerceWeb.ProductLive.Index do
   use EcommerceWeb, :live_view
   alias Ecommerce.Products
 
-   on_mount {EcommerceWeb.UserAuth, :mount_current_scope}
+  on_mount {EcommerceWeb.UserAuth, :mount_current_scope}
 
   embed_templates "product_templates/*"
 
@@ -31,9 +31,12 @@ defmodule EcommerceWeb.ProductLive.Index do
     do: assign(socket, page_title: "Manager - Products")
 
   defp apply_action(socket, :new, _params) do
+    product = %Products.Product{}
+
     assign(socket,
       page_title: "New Product",
-      changeset: Products.Product.changeset(%Products.Product{}, %{})
+      product: product,
+      changeset: Products.Product.changeset(product, %{})
     )
   end
 
