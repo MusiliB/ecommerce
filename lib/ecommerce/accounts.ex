@@ -300,5 +300,4 @@ defmodule Ecommerce.Accounts do
     |> User.role_changeset(%{role: Atom.to_string(role)})
     |> Repo.update()
   end
-  
 end

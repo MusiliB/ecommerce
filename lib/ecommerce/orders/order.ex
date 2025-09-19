@@ -1,13 +1,12 @@
 defmodule Ecommerce.Orders.Order do
-
-   use Ecto.Schema
+  use Ecto.Schema
   import Ecto.Changeset
 
   schema "orders" do
     field :date, :utc_datetime
     field :status, :string, default: "pending"
     belongs_to :user, Ecommerce.Accounts.User
-    has_many :order_items, Ecommerce.Store.OrderItem
+    has_many :order_items, Ecommerce.OrderItems.OrderItem
 
     timestamps()
   end

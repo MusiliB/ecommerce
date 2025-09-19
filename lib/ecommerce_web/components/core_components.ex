@@ -469,4 +469,12 @@ defmodule EcommerceWeb.CoreComponents do
   def translate_errors(errors, field) when is_list(errors) do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
   end
+
+  def card(assigns) do
+    ~H"""
+    <div class="border rounded p-4 shadow">
+      {render_slot(@inner_block)}
+    </div>
+    """
+  end
 end

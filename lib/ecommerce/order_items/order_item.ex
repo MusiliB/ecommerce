@@ -1,12 +1,13 @@
-defmodule Ecommerce.Store.OrderItem do
+defmodule Ecommerce.OrderItems.OrderItem do
+
   use Ecto.Schema
   import Ecto.Changeset
 
   schema "order_items" do
     field :quantity, :integer
     field :price, :decimal
-    belongs_to :order, Ecommerce.Store.Order
-    belongs_to :product, Ecommerce.Store.Product
+    belongs_to :order, Ecommerce.Orders.Order
+    belongs_to :product, Ecommerce.Products.Product
 
     timestamps()
   end

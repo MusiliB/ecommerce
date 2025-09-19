@@ -42,7 +42,8 @@ defmodule EcommerceWeb.Router do
   scope "/", EcommerceWeb do
     pipe_through [:browser, :require_auth]
 
-    live "/products", ProductLive.Index, :index     # ✅ normal user
+    # ✅ normal user
+    live "/products", ProductLive.Index, :index
     live "/cart", CartLive.Index, :index
     live "/cart/checkout", CartLive.Checkout, :checkout
     live "/orders", OrderLive.Index, :index
@@ -77,7 +78,7 @@ defmodule EcommerceWeb.Router do
     pipe_through [:browser, :require_manager]
 
     live "/products", ProductLive.Index, :manager_index
-    live "/orders", OrderLive.Index, :manager_index   
+    live "/orders", OrderLive.Index, :manager_index
 
     # ✅ Managers also get new/edit product routes
     # scope "/products" do

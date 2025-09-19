@@ -3,15 +3,13 @@ defmodule Ecommerce.Accounts.User do
   import Ecto.Changeset
 
   schema "users" do
-    field :name, :string
     field :email, :string
-    field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :utc_datetime
     field :authenticated_at, :utc_datetime, virtual: true
     field :role, Ecto.Enum, values: [:user, :admin, :manager], default: :user
 
-    has_many :orders, Ecommerce.Store.Order
+    has_many :orders, Ecommerce.Orders.Order
 
     timestamps(type: :utc_datetime)
   end

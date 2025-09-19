@@ -1,0 +1,36 @@
+<h1>{@page_title}</h1>
+
+<%= if Enum.empty?(@products) do %>
+  <p>No products found.</p>
+<% else %>
+  <div class="grid grid-cols-3 gap-4">
+    <%= for product <- @products do %>
+      <.card>
+        <h2>{product.name}</h2>
+        <p>${product.price}</p>
+        <p>{product.description}</p>
+        <p>Stock: {product.stock}</p>
+
+       <%= if @current_scope.user do %>
+          <.button phx-click="add_to_cart" phx-value-product_id={product.id}>
+            Add to Cart
+          </.button>
+        <% end %>
+
+        <%= if @current_scope.user && @current_scope.user.role == :admin do %>
+          <.link navigate={~p"/admin/products/#{product.id}/edit"}>Edit</.link>
+          <.button phx-click="delete" phx-value-id={product.id}>Delete</.button>
+        <% end %>
+      </.card>
+    <% end %>
+  </div>
+<% end %>
+
+<%= if @current_scope.user && @current_scope.user.role == :admin do %>
+  <.link navigate={~p"/admin/products/new"}>
+    <.button>New Product</.button>
+  </.link>
+<% end %>
+
+
+// admin@example.com

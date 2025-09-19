@@ -1,5 +1,4 @@
 defmodule Ecommerce.Products.Product do
-
   use Ecto.Schema
   import Ecto.Changeset
 

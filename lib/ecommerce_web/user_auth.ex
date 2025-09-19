@@ -285,16 +285,16 @@ defmodule EcommerceWeb.UserAuth do
 
   defp maybe_store_return_to(conn), do: conn
 
-def require_role(conn, roles) when is_list(roles) do
-  user = conn.assigns.current_scope.user
+  def require_role(conn, roles) when is_list(roles) do
+    user = conn.assigns.current_scope.user
 
-  if user && user.role in roles do
-    conn
-  else
-    conn
-    |> put_flash(:error, "You are not authorized to access this page.")
-    |> redirect(to: ~p"/")
-    |> halt()
+    if user && user.role in roles do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You are not authorized to access this page.")
+      |> redirect(to: ~p"/")
+      |> halt()
+    end
   end
-end
 end
