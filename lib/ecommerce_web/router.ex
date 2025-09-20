@@ -66,6 +66,8 @@ defmodule EcommerceWeb.Router do
     live "/orders", OrderLive.Index, :admin_index
     live "/users", UserLive.Index, :index
 
+    live "/users/:id/edit", UserLive.Edit, :edit
+
     # Shared product management routes
     scope "/products" do
       live "/new", ProductLive.Index, :new

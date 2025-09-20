@@ -138,4 +138,36 @@ defmodule Ecommerce.Accounts.User do
     |> validate_required([:role])
     |> validate_inclusion(:role, [:user, :admin, :manager])
   end
+
+  def changeset(user, attrs) do
+    user
+    |> cast(attrs, [:email, :role])
+    |> validate_optional_email(attrs)
+    |> validate_optional_role(attrs)
+  end
+
+  defp validate_optional_email(changeset, attrs) do
+    if Map.has_key?(attrs, "email") or Map.has_key?(attrs, :email) do
+      changeset
+      |> validate_required([:email])
+      |> validate_format(:email, ~r/^[^@,;\s]+@[^@,;\s]+$/,
+        message: "must have the @ sign and no spaces"
+      )
+      |> validate_length(:email, max: 160)
+      |> unsafe_validate_unique(:email, Ecommerce.Repo)
+      |> unique_constraint(:email)
+    else
+      changeset
+    end
+  end
+
+  defp validate_optional_role(changeset, attrs) do
+    if Map.has_key?(attrs, "role") or Map.has_key?(attrs, :role) do
+      changeset
+      |> validate_required([:role])
+      |> validate_inclusion(:role, [:user, :admin, :manager])
+    else
+      changeset
+    end
+  end
 end

@@ -1,0 +1,28 @@
+<div class="mx-auto w-5/6 space-y-4">
+  <h1 class="text-2xl font-bold mb-4 text-center">{@page_title}</h1>
+
+  <%= if Enum.empty?(@users) do %>
+    <p class="text-center text-gray-600">No users found.</p>
+  <% else %>
+    <div class="mx-auto max-w-xl space-y-4">
+      <.table id="users" rows={@users}>
+        <:col :let={user} label="ID">{user.id}</:col>
+        <:col :let={user} label="Email">{user.email}</:col>
+        <:col :let={user} label="Role">{user.role}</:col>
+        <:col :let={user} label="Confirmed At">
+          <%= if user.confirmed_at do %>
+            {user.confirmed_at}
+          <% else %>
+            <span class="text-gray-400">Not confirmed</span>
+          <% end %>
+        </:col>
+
+        <:col :let={user} label="Actions">
+          <.link navigate={~p"/admin/users/#{user.id}/edit"} class="text-blue-600 hover:underline">
+            Edit
+          </.link>
+        </:col>
+      </.table>
+    </div>
+  <% end %>
+</div>

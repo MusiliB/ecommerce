@@ -300,4 +300,23 @@ defmodule Ecommerce.Accounts do
     |> User.role_changeset(%{role: Atom.to_string(role)})
     |> Repo.update()
   end
+
+  def list_users do
+    Repo.all(User)
+  end
+
+  def change_user(%User{} = user, attrs \\ %{}) do
+    User.email_changeset(user, attrs, validate_unique: false)
+  end
+
+  def update_user(%User{} = user, attrs) do
+    user
+    |> User.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def change_user_role(%User{} = user, attrs \\ %{}) do
+    User.role_changeset(user, attrs)
+  end
+
 end
