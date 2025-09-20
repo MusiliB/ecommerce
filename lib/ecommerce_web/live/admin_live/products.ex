@@ -4,8 +4,14 @@ defmodule EcommerceWeb.AdminLive.Products do
 
   embed_templates "admin_templates/*"
 
-  @impl true
-  def render(assigns), do: products(assigns)
+@impl true
+def render(assigns) do
+  case assigns.live_action do
+    :index -> products_index(assigns)
+    :new   -> products_form(assigns)
+    :edit  -> products_form(assigns)
+  end
+end
 
   @impl true
   def mount(_params, _session, socket) do

@@ -1,0 +1,36 @@
+<div class="mx-auto w-5/6 space-y-4">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold">Products</h1>
+
+    <.link
+      navigate={~p"/dashboard/products/new"}
+      class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg shadow hover:bg-blue-700"
+    >
+      <.icon name="hero-plus" class="w-5 h-5 mr-2" />
+      New Product
+    </.link>
+  </div>
+
+  <%= if Enum.empty?(@products) do %>
+    <p class="text-center text-gray-600">No products found.</p>
+  <% else %>
+    <div class="mx-auto max-w-full space-y-4">
+      <.table id="products" rows={@products}>
+        <:col :let={product} label="Name">{product.name}</:col>
+        <:col :let={product} label="Price">{product.price}</:col>
+        <:col :let={product} label="Description">{product.description}</:col>
+        <:col :let={product} label="Stock">{product.stock}</:col>
+        <:col :let={product} label="Actions">
+          <div class="flex gap-3">
+            <.link navigate={~p"/dashboard/products/#{product.id}/edit"} class="text-blue-600 hover:text-blue-800">
+              <.icon name="hero-pencil-square" class="w-5 h-5" />
+            </.link>
+            <.button phx-click="delete" phx-value-id={product.id} data-confirm="Are you sure?" class="text-red-600 hover:text-red-800">
+              <.icon name="hero-trash" class="w-5 h-5" />
+            </.button>
+          </div>
+        </:col>
+      </.table>
+    </div>
+  <% end %>
+</div>
