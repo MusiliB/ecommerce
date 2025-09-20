@@ -65,18 +65,18 @@ defmodule EcommerceWeb.Router do
       on_mount: [{EcommerceWeb.UserAuth, :mount_current_scope}],
       layout: {EcommerceWeb.AdminLive.Layout, :render} do
       live "/", AdminLive.Dashboard, :index
-      live "/products", AdminLive.Products, :products
+      live "/products", AdminLive.Products, :index
       live "/orders", AdminLive.Orders, :orders
       live "/users", UserLive.Index, :index
-    end
+      live "/users/:id/edit", UserLive.Edit, :edit
 
-    live "/users/:id/edit", UserLive.Edit, :edit
+      scope "/products" do
+        live "/new", AdminLive.Products, :new
+        live "/:id/edit", AdminLive.Products, :edit
+      end
+    end
 
     # Shared product management routes
-    scope "/products" do
-      live "/new", ProductLive.Index, :new
-      live "/:id/edit", ProductLive.Index, :edit
-    end
   end
 
   ## Public LiveView auth routes
