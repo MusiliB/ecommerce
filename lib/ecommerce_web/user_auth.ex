@@ -56,7 +56,7 @@ defmodule EcommerceWeb.UserAuth do
     conn
     |> renew_session(nil)
     |> delete_resp_cookie(@remember_me_cookie)
-    |> redirect(to: ~p"/")
+    |> redirect(to: ~p"/users/log-in")
   end
 
   @doc """
@@ -258,8 +258,16 @@ defmodule EcommerceWeb.UserAuth do
 
   @doc "Returns the path to redirect to after log in."
   # the user was already logged in, redirect to settings
-  def signed_in_path(%Plug.Conn{assigns: %{current_scope: %Scope{user: %Accounts.User{}}}}) do
-    ~p"/users/settings"
+  def signed_in_path(%Plug.Conn{
+        assigns: %{current_scope: %Scope{user: %Accounts.User{role: role}}}
+      }) do
+    case role do
+      :admin -> ~p"/dashboard"
+      # or ~p"/manager/dashboard" if you add one
+      :manager -> ~p"/dashboard"
+      :user -> ~p"/products"
+      _ -> ~p"/"
+    end
   end
 
   def signed_in_path(_), do: ~p"/"

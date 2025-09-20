@@ -4,7 +4,7 @@
   <%= if Enum.empty?(@users) do %>
     <p class="text-center text-gray-600">No users found.</p>
   <% else %>
-    <div class="mx-auto max-w-xl space-y-4">
+    <div class="mx-auto max-w-full space-y-4">
       <.table id="users" rows={@users}>
         <:col :let={user} label="ID">{user.id}</:col>
         <:col :let={user} label="Email">{user.email}</:col>

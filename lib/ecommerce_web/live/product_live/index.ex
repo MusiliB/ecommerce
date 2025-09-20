@@ -13,8 +13,26 @@ defmodule EcommerceWeb.ProductLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    products = Products.list_products()
-    {:ok, assign(socket, products: products, cart: %{}, page_title: "Products")}
+    current_user = socket.assigns.current_scope.user
+
+    cond do
+      # If not logged in
+      is_nil(current_user) ->
+        {:ok,
+         assign(socket, products: Products.list_products(), cart: %{}, page_title: "Products")}
+
+      # If admin or manager, redirect to dashboard
+      current_user.role in [:admin, :manager] ->
+        {:ok,
+         socket
+         |> put_flash(:info, "Redirected to dashboard")
+         |> push_navigate(to: ~p"/dashboard")}
+
+      # Otherwise, normal user → show products
+      true ->
+        {:ok,
+         assign(socket, products: Products.list_products(), cart: %{}, page_title: "Products")}
+    end
   end
 
   @impl true
@@ -113,7 +131,7 @@ defmodule EcommerceWeb.ProductLive.Index do
         {:noreply,
          socket
          |> put_flash(:info, "Product created successfully.")
-         |> push_navigate(to: ~p"/admin/products")}
+         |> push_navigate(to: ~p"/dashboard/products")}
 
       {:error, changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
@@ -128,7 +146,7 @@ defmodule EcommerceWeb.ProductLive.Index do
         {:noreply,
          socket
          |> put_flash(:info, "Product updated successfully.")
-         |> push_navigate(to: ~p"/admin/products")}
+         |> push_navigate(to: ~p"/dashboard/products")}
 
       {:error, changeset} ->
         {:noreply, assign(socket, changeset: changeset)}

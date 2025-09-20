@@ -1,49 +1,72 @@
-<div class="mx-auto w-5/6 space-y-4">
-  <h1 class="text-center">{@page_title}</h1>
+<div class="mx-auto w-5/6 py-8">
+  <h1 class="text-3xl font-bold text-center mb-8">{@page_title}</h1>
 
   <%= if @live_action in [:new, :edit] do %>
-    <div class="mx-auto max-w-sm space-y-4">
-      <.form :let={f} for={@changeset} phx-submit="save" phx-change="validate">
-        <.input field={f[:name]} label="Name" />
-        <.input field={f[:price]} label="Price" />
-        <.input field={f[:description]} label="Description" />
-        <.input field={f[:stock]} label="Stock" />
-        <.button>Save</.button>
+    <!-- Product Form -->
+    <div class="mx-auto max-w-md bg-white shadow-lg rounded-lg p-6">
+      <.form :let={f} for={@changeset} phx-submit="save" phx-change="validate" class="space-y-4">
+        <.input field={f[:name]} label="Product Name" />
+        <.input field={f[:price]} label="Price" type="number" step="0.01" />
+        <.input field={f[:description]} label="Description" type="textarea" />
+        <.input field={f[:stock]} label="Stock" type="number" />
+        <.button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+          Save
+        </.button>
       </.form>
     </div>
   <% else %>
+    <!-- Product Grid -->
     <%= if Enum.empty?(@products) do %>
-      <p>No products found.</p>
+      <p class="text-center text-gray-500">No products found.</p>
     <% else %>
-      <div class="grid grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         <%= for product <- @products do %>
-          <.card>
-            <h2>{product.name}</h2>
-            <p>${product.price}</p>
-            <p>{product.description}</p>
-            <p>Stock: {product.stock}</p>
+          <div class="border rounded-lg shadow hover:shadow-lg transition p-6 bg-white flex flex-col">
+            <h2 class="text-xl font-semibold mb-2">{product.name}</h2>
+            <p class="text-lg font-bold text-blue-600 mb-2">${product.price}</p>
+            <p class="text-gray-600 mb-2">{product.description}</p>
+            <p class="text-sm text-gray-500 mb-4">Stock: {product.stock}</p>
 
-            <%= if @current_scope.user do %>
-              <.button phx-click="add_to_cart" phx-value-product_id={product.id}>
-                Add to Cart
-              </.button>
-            <% end %>
+            <div class="mt-auto space-x-2">
+              <%= if @current_scope.user do %>
+                <.button
+                  phx-click="add_to_cart"
+                  phx-value-product_id={product.id}
+                  class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                >
+                  Add to Cart
+                </.button>
+              <% end %>
 
-            <%= if @current_scope.user && @current_scope.user.role == :admin do %>
-              <.link navigate={~p"/admin/products/#{product.id}/edit"}>
-                <.button>Edit</.button>
-              </.link>
-              <.button phx-click="delete" phx-value-id={product.id}>Delete</.button>
-            <% end %>
-          </.card>
+              <%= if @current_scope.user && @current_scope.user.role == :admin do %>
+                <.link navigate={~p"/dashboard/products/#{product.id}/edit"}>
+                  <.button class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
+                    Edit
+                  </.button>
+                </.link>
+                <.button
+                  phx-click="delete"
+                  phx-value-id={product.id}
+                  class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+                >
+                  Delete
+                </.button>
+              <% end %>
+            </div>
+          </div>
         <% end %>
       </div>
     <% end %>
-
+    
+<!-- New Product (Admin only) -->
     <%= if @current_scope.user && @current_scope.user.role == :admin do %>
-      <.link navigate={~p"/admin/products/new"}>
-        <.button>New Product</.button>
-      </.link>
+      <div class="mt-8 text-center">
+        <.link navigate={~p"/dashboard/products/new"}>
+          <.button class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+            + New Product
+          </.button>
+        </.link>
+      </div>
     <% end %>
   <% end %>
 </div>

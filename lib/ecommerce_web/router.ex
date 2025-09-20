@@ -57,14 +57,18 @@ defmodule EcommerceWeb.Router do
     post "/users/update-password", UserSessionController, :update_password
   end
 
-  ## Admin routes
-  scope "/admin", EcommerceWeb do
+  ## Admin/manager  routes
+  scope "/dashboard", EcommerceWeb do
     pipe_through [:browser, :require_admin]
 
-    live "/", AdminLive.Dashboard, :index
-    live "/products", ProductLive.Index, :admin_index
-    live "/orders", OrderLive.Index, :admin_index
-    live "/users", UserLive.Index, :index
+    live_session :admin,
+      on_mount: [{EcommerceWeb.UserAuth, :mount_current_scope}],
+      layout: {EcommerceWeb.AdminLive.Layout, :render} do
+      live "/", AdminLive.Dashboard, :index
+      live "/products", AdminLive.Products, :products
+      live "/orders", AdminLive.Orders, :orders
+      live "/users", UserLive.Index, :index
+    end
 
     live "/users/:id/edit", UserLive.Edit, :edit
 
@@ -73,20 +77,6 @@ defmodule EcommerceWeb.Router do
       live "/new", ProductLive.Index, :new
       live "/:id/edit", ProductLive.Index, :edit
     end
-  end
-
-  ## Manager routes
-  scope "/manager", EcommerceWeb do
-    pipe_through [:browser, :require_manager]
-
-    live "/products", ProductLive.Index, :manager_index
-    live "/orders", OrderLive.Index, :manager_index
-
-    # ✅ Managers also get new/edit product routes
-    # scope "/products" do
-    #   live "/new", ProductLive.Index, :new
-    #   live "/:id/edit", ProductLive.Index, :edit
-    # end
   end
 
   ## Public LiveView auth routes

@@ -42,7 +42,7 @@ defmodule EcommerceWeb.UserLive.Edit do
         {:noreply,
          socket
          |> put_flash(:info, "User updated successfully.")
-         |> push_navigate(to: ~p"/admin/users")}
+         |> push_navigate(to: ~p"/dashboard/users")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
